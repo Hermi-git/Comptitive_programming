@@ -1,0 +1,29 @@
+# Problem: Redundant Connection - https://leetcode.com/problems/redundant-connection/
+
+class Solution:
+    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+        root = [i for i in range(len(edges)+1)]
+        rank = [0] * (len(edges)+1
+)
+        def find(x):
+            if x != root[x]:
+                root[x] = find(root[x])
+            return root[x]
+
+        def union(x, y):
+            rootx, rooty = find(x), find(y)
+            if rootx == rooty:
+                return False
+            if rank[rootx] > rank[rooty]:
+                root[rooty] = rootx
+            elif rank[rootx] < rank[rooty]:
+                root[rootx] = rooty
+            else:
+                root[rooty] = rootx
+                rank[rootx] += 1
+            return True
+            
+                
+        for x, y in edges:
+            if not union(x, y):
+                return [x, y]  
